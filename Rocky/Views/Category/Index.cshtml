@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Rocky.Models.Category>
+@{
+    ViewData["Title"] = "Category Page";
+}
+
+@if (TempData["Message"] != null)
+{
+  <div class="alert alert-success" role="alert">
+    @TempData["Message"]
+  </div>
+}
+
+<div class="container p-3">
+  <div class="row pt-4">
+    <div class="col-6">
+      <h2 class="text-primary">Category List</h2>
+    </div>
+    <div class="col-6 text-right">
+      <a asp-controller="Category" asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Create New Category
+      </a>
+    </div>
+  </div>
+
+  <br /><br />
+
+  @if(Model.Count() > 0)
+  {
+    <table class="table table-bordered table-striped" style="width:100%">
+      <thead>
+        <tr>
+          <th>Category Name</th>
+          <th>Display Order</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach(var cat in Model)
+          {
+            <tr>
+              <td class="w-50">@cat.Name</td>
+              <td class="w-30">@cat.DisplayOrder</td>
+              <td class="text-center">
+                <div class="w-75 btn-group" role="group">
+                  <a asp-controller="Category" asp-route-id="@cat.Id" asp-action="Edit" class="btn btn-primary mx-2">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button data-toggle="modal" data-target="#delete-modal-@cat.Id" class="btn btn-danger mx-2">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+      </tbody>
+    </table>
+  }
+  else
+  {
+      <p>No category exists.</p>
+  }
+</div>
+
+@foreach (var cat in Model)
+{
+  <!-- Modal -->
+  <div class="modal fade" id="delete-modal-@cat.Id" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete @cat.Name</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           Are you sure that you want to delete @cat.Name from the list?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <a asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" role="button" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+}
